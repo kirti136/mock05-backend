@@ -17,7 +17,7 @@ userRouter.post("/signup", async (req, res) => {
     const newUser = new UserModel({ email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: `User Signup Successfully` });
+    res.status(201).json({ message: `User Signup Successfully`, newUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
