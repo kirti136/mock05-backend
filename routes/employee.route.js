@@ -63,6 +63,13 @@ const employeeRouter = Router();
 employeeRouter.post("/", async (req, res) => {
   try {
     const { firstname, lastname, email, department, salary } = req.body;
+
+    const existingEmployee = await EmployeeModel.findOne({ email });
+
+    if (existingEmployee) {
+      return res.status(400).json({ message: "Employee with the same email already exists" });
+    }
+
     const newEmployee = new EmployeeModel({
       firstname,
       lastname,
@@ -76,6 +83,7 @@ employeeRouter.post("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 /**
  * @swagger
