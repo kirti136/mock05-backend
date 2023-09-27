@@ -300,11 +300,14 @@ employeeRouter.get("/pagination", async (req, res) => {
   const perPage = 5;
 
   try {
+    const totalEmployees = await EmployeeModel.countDocuments();
+    const totalPages = Math.ceil(totalEmployees / perPage);
+
     const employees = await EmployeeModel.find()
       .skip((page - 1) * perPage)
       .limit(perPage);
 
-    res.status(200).json(employees);
+    res.status(200).json({ employees, totalPages });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
