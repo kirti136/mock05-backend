@@ -406,6 +406,9 @@ employeeRouter.get("/sort/:order", async (req, res) => {
     if (order.toLowerCase() === "desc") {
       sortOption = -1;
     }
+    if (order.toLowerCase() === "asc") {
+      sortOption = 1;
+    }
     const employees = await EmployeeModel.find().sort({ salary: sortOption });
     res.status(200).json(employees);
   } catch (error) {
