@@ -3,7 +3,63 @@ const { EmployeeModel } = require("../models/employee.model");
 
 const employeeRouter = Router();
 
-// Add Employees
+/**
+ * @swagger
+ * tags:
+ *   name: Employee
+ *   description: Employee-related endpoints
+ */
+
+/**
+ * @swagger
+ * /employees:
+ *   post:
+ *     summary: Add a new employee
+ *     tags: [Employee]
+ *     requestBody:
+ *       description: Employee data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               salary:
+ *                 type: number
+ *             example:
+ *               firstname: John
+ *               lastname: Doe
+ *               email: john.doe@example.com
+ *               department: HR
+ *               salary: 50000
+ *     responses:
+ *       201:
+ *         description: Employee added successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: New Employee added
+ *               newEmployee:
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.post("/", async (req, res) => {
   try {
     const { firstname, lastname, email, department, salary } = req.body;
@@ -21,7 +77,37 @@ employeeRouter.post("/", async (req, res) => {
   }
 });
 
-// Get All Data
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     summary: Get all employees
+ *     tags: [Employee]
+ *     responses:
+ *       200:
+ *         description: List of all employees
+ *         content:
+ *           application/json:
+ *             example:
+ *               -
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *               -
+ *                 firstname: Jane
+ *                 lastname: Smith
+ *                 email: jane.smith@example.com
+ *                 department: IT
+ *                 salary: 60000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.get("/", async (req, res) => {
   try {
     const employees = await EmployeeModel.find();
@@ -31,7 +117,66 @@ employeeRouter.get("/", async (req, res) => {
   }
 });
 
-// Edit Data
+/**
+ * @swagger
+ * /employees/{id}:
+ *   patch:
+ *     summary: Edit an employee's information
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Updated employee data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               salary:
+ *                 type: number
+ *             example:
+ *               firstname: UpdatedFirstName
+ *               lastname: UpdatedLastName
+ *               email: updated.email@example.com
+ *               department: UpdatedDepartment
+ *               salary: 60000
+ *     responses:
+ *       200:
+ *         description: Employee information updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               firstname: UpdatedFirstName
+ *               lastname: UpdatedLastName
+ *               email: updated.email@example.com
+ *               department: UpdatedDepartment
+ *               salary: 60000
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Employee not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.patch("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -52,7 +197,44 @@ employeeRouter.patch("/:id", async (req, res) => {
   }
 });
 
-// Delete Employee
+/**
+ * @swagger
+ * /employees/{id}:
+ *   delete:
+ *     summary: Delete an employee
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee deleted successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Employee deleted
+ *               deletedEmployee:
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Employee not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -68,7 +250,43 @@ employeeRouter.delete("/:id", async (req, res) => {
   }
 });
 
-// Pagination
+/**
+ * @swagger
+ * /employees/pagination:
+ *   get:
+ *     summary: Get employees with pagination
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *     responses:
+ *       200:
+ *         description: List of employees with pagination
+ *         content:
+ *           application/json:
+ *             example:
+ *               -
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *               -
+ *                 firstname: Jane
+ *                 lastname: Smith
+ *                 email: jane.smith@example.com
+ *                 department: IT
+ *                 salary: 60000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.get("/pagination", async (req, res) => {
   const page = req.query.page || 1;
   const perPage = 5;
@@ -84,7 +302,43 @@ employeeRouter.get("/pagination", async (req, res) => {
   }
 });
 
-// Filter by Department
+/**
+ * @swagger
+ * /employees/filter/{department}:
+ *   get:
+ *     summary: Get employees filtered by department
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: department
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees in the specified department
+ *         content:
+ *           application/json:
+ *             example:
+ *               -
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *               -
+ *                 firstname: Jane
+ *                 lastname: Smith
+ *                 email: jane.smith@example.com
+ *                 department: HR
+ *                 salary: 60000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.get("/filter/:department", async (req, res) => {
   const { department } = req.params;
 
@@ -97,7 +351,43 @@ employeeRouter.get("/filter/:department", async (req, res) => {
   }
 });
 
-// Sort by Salary
+/**
+ * @swagger
+ * /employees/sort/{order}:
+ *   get:
+ *     summary: Get employees sorted by salary
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: order
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees sorted by salary
+ *         content:
+ *           application/json:
+ *             example:
+ *               -
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *               -
+ *                 firstname: Jane
+ *                 lastname: Smith
+ *                 email: jane.smith@example.com
+ *                 department: IT
+ *                 salary: 60000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.get("/sort/:order", async (req, res) => {
   try {
     const { order } = req.params;
@@ -112,7 +402,43 @@ employeeRouter.get("/sort/:order", async (req, res) => {
   }
 });
 
-// Search Employee
+/**
+ * @swagger
+ * /api/employees/search/{firstName}:
+ *   get:
+ *     summary: Search employees by first name
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: firstName
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees matching the search criteria
+ *         content:
+ *           application/json:
+ *             example:
+ *               -
+ *                 firstname: John
+ *                 lastname: Doe
+ *                 email: john.doe@example.com
+ *                 department: HR
+ *                 salary: 50000
+ *               -
+ *                 firstname: Jane
+ *                 lastname: Smith
+ *                 email: jane.smith@example.com
+ *                 department: IT
+ *                 salary: 60000
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Internal server error
+ */
 employeeRouter.get("/search/:firstName", async (req, res) => {
   const { firstName } = req.params;
 
